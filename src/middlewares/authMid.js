@@ -17,6 +17,9 @@ export const verifyToken = async (req,res , next)=>{
         } catch (error) {
             return res.status(500).json({msg:"server error"})
         }
+    }else{
+          return res.status(400).json({msg:"Token not found , no authorization"});
+
     }
 
 
