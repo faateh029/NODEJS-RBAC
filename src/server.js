@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
-const port = process.env.PORT||7001;
+const port = process.env.PORT||7001 
 const app = express();
 
 //middleware
