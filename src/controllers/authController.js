@@ -17,7 +17,7 @@ export const registerController = async (req,res)=>{
     } catch (error) {
         return res.status(500).json({msg:"Internal Server Error"});
     }
-  
+
 }
 
 export const loginController = async (req,res)=>{
@@ -36,7 +36,8 @@ export const loginController = async (req,res)=>{
     return res.status(409).json({msg:"Credentials are incorrect"})
   }
   const token = await jwt.sign({id:user._id , role:user.role} , process.env.JWT_SECRET, {expiresIn:"1h"})
-  console.log(token);
+  // const token = await jwt.sign({id:user._id} , process.env.JWT_SECRET, {expiresIn:"1h"})
+  // console.log(token);
   res.status(201).json({token:token});
      
     } catch (error) {

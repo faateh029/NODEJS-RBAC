@@ -10,7 +10,7 @@ export const verifyToken = async (req,res , next)=>{
         }
         try {
         const decode = jwt.verify(accessToken ,process.env.JWT_SECRET);
-        req.user = decode;  
+        req.user = decode;
         console.log(`the decoded user is ${decode}`);
         next();
 
