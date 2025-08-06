@@ -16,5 +16,22 @@ export const register = async (req,res)=>{
 }
 
 export const login = async (req,res)=>{
-    
+    try {
+     const {username , password } = req.body;
+     
+  const user = await User.findOne({username:username});
+  if(!user){
+    return res.status(409).json({msg:"Credentials are incorrect"})
+  }
+  const isMatch = await bcryptjs.compare(password , user.password);
+  if(!isMatch){
+    return res.status(409).json({msg:"Credentials are incorrect"})
+  }
+  const token = await Jwt.sign({id:user._id , role:user.role} , process.env.JWT_SECRET, {expiresIn:"1h"})
+  res.status(201).json({msg:"User logged in successfully"});
+     
+    } catch (error) {
+        return res.status(500).json({msg:"Something went wrong"});
+    }
+     
 }
