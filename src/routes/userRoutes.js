@@ -9,4 +9,4 @@ export const userRouter = new Router();
 // userRouter.post('/manager' ,verifyToken, authorizeRoles("admin", "manager"),managerController);
 
 
-userRouter.post('/welcome' , welcomeController);
+userRouter.post('/welcome' , verifyToken,welcomeController);

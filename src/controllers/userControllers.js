@@ -11,15 +11,19 @@
 
 
 export const welcomeController = async (req , res )=>{
+    try {
+     
     const role  = req.user.role ; 
     if(role==="admin"){
-        res.status(200).json({msg:"Hello admin"})
+        return res.status(200).json({msg:"Hello admin"})
     }else if (role==="user"){
-        res.status(200).json({msg:"Hello user"});
+        return res.status(200).json({msg:"Hello user"});
     }else if(role==="manager"){
-                res.status(200).json({msg:"Hello manager"});
+       return res.status(200).json({msg:"Hello manager"});
     }else{
-        
-                res.status(403).json({msg:"role not recognized"});
+        return res.status(403).json({msg:"role not recognized"});
+    }   
+    } catch (error) {
+      return res.status(500).json({msg:"500 Server Error"})   
     }
 }

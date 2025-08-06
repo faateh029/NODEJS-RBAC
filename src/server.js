@@ -14,7 +14,7 @@ app.use(express.json());
 //routes
 
 app.use('/api' , authRouter);
-app.use('/api/users' , userRouter)
+app.use('/api' , userRouter)
 //port
 
 app.listen(port , ()=>{
