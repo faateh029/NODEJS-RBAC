@@ -1,7 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import { dbConnect } from './config/dbConnect.js';
 dotenv.config();
 const port = process.env.PORT||7001 
+dbConnect();
 const app = express();
 
 //middleware
