@@ -64,7 +64,7 @@ export const loginController = async (req,res , next)=>{
 }
 
 
-export const forgotPasswordController = async (req,res,error)=>{
+export const forgotPasswordController = async (req,res,next)=>{
   try {
    
   const {username} = req.body; 
@@ -80,16 +80,16 @@ export const forgotPasswordController = async (req,res,error)=>{
     user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
   //this is nodemailer setup
-    const transporter = nodemailer.createTranspor({
+    const transporter = nodemailer.createTransport({
       service:"gmail",
       auth:{
         user:process.env.NM_EMAIL,
-        pass:proccess.env.NM_PASS
+        pass:process.env.NM_PASS
       }
     });
 
     await transporter.sendMail({
-      from:proccess.env.NM_EMAIL,
+      from:process.env.NM_EMAIL,
       to:username,
       subject:"Password reset OTP",
       text:`Your OTP is ${otp} it will expire in 5 minutes`
