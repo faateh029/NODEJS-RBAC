@@ -98,3 +98,27 @@ export const forgotPasswordController = async (req,res,error)=>{
   } catch (error) {
            next(error)    
   }}
+
+
+
+
+
+  export const verifyOtpController = async(req,res,next)=>{
+    try {
+     
+         const {username , otp} = req.body;
+         const user = await User.findOne({username});
+         if(!user){
+          const error = new Error("No user registered with this email")
+          throw error;
+         }
+
+         if(user.otp!=otp||user.otpexpires<Date.now()){
+          const error = new Error("OTP expired or invalid")
+         }
+         res.status(200).json({msg:"OTP verified successfully"});
+ 
+    } catch (error) {
+          next(error);      
+    }
+    }
