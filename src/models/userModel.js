@@ -13,7 +13,13 @@ const userScheema = new mongoose.Schema ({
         type:String,
         required:true,
         enum:["admin" , "manager" , "user"]
-        }
+        },
+    otp:{
+        type:String
+    },
+    otpexpires:{
+        type:Date
+    }
        
 },  {
             timestamps:true

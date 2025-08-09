@@ -1,6 +1,8 @@
 import User from '../models/userModel.js';
 import logger from '../config/logger.js';
 import bcryptjs from 'bcryptjs';
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 export const registerController = async (req,res , next)=>{
     try {
@@ -60,3 +62,39 @@ export const loginController = async (req,res , next)=>{
       }
      
 }
+
+
+export const forgotPasswordController = async (req,res,error)=>{
+  try {
+   
+  const {username} = req.body; 
+  const user = User.findOne({username});
+  if(!username){
+    const error = new Error("No account registered with this email");
+      throw error;
+  }
+  
+  // generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp;
+    user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
+    await user.save();
+  //this is nodemailer setup
+    const transporter = nodemailer.transporter({
+      service:"gmail",
+      auth:{
+        email:process.env.NM_EMAIL,
+        pass:proccess.env.NM_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from:proccess.env.NM_EMAIL,
+      to:username,
+      subject:"Password reset OTP",
+      text:`Your OTP is ${otp} it will expire in 5 minutes`
+    })
+    res.json({msg:"OTP sent to your mail"})
+  } catch (error) {
+           next(error)    
+  }}
