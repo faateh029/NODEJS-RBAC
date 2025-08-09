@@ -68,7 +68,7 @@ export const forgotPasswordController = async (req,res,error)=>{
   try {
    
   const {username} = req.body; 
-  const user = User.findOne({username});
+  const user = await User.findOne({username});
   if(!username){
     const error = new Error("No account registered with this email");
       throw error;
@@ -80,10 +80,10 @@ export const forgotPasswordController = async (req,res,error)=>{
     user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
   //this is nodemailer setup
-    const transporter = nodemailer.transporter({
+    const transporter = nodemailer.createTranspor({
       service:"gmail",
       auth:{
-        email:process.env.NM_EMAIL,
+        user:process.env.NM_EMAIL,
         pass:proccess.env.NM_PASS
       }
     });
@@ -116,9 +116,34 @@ export const forgotPasswordController = async (req,res,error)=>{
          if(user.otp!=otp||user.otpexpires<Date.now()){
           const error = new Error("OTP expired or invalid")
          }
+         user.otpVerified=true;
+         await user.save();
          res.status(200).json({msg:"OTP verified successfully"});
  
     } catch (error) {
           next(error);      
     }
+    }
+
+
+    export const resetPasswordController = async (req,res,next)=>{
+      try {
+       
+      const {username , password} = req.body;
+       const user = await User.findOne({username});
+         if(!user){
+          const error = new Error("No user registered with this email")
+          throw error;
+         }
+         const hashPass = await bcryptjs.hash(password ,10);
+         user.password = hashPass;
+         user.otp = undefined;
+         user.otpexpires=undefined;
+         user.otpVerified=undefined;
+         await user.save();
+         res.status(200).json({msg:"password reset successfully"})
+ 
+      } catch (error) {
+                 next(error);        
+      }
     }
