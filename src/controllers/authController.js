@@ -115,6 +115,7 @@ export const forgotPasswordController = async (req,res,next)=>{
 
          if(user.otp!=otp||user.otpexpires<Date.now()){
           const error = new Error("OTP expired or invalid")
+          throw error;
          }
          user.otpVerified=true;
          await user.save();
